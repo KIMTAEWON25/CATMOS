@@ -1,0 +1,33 @@
+import pandas as pd 
+from sklearn.cluster import DBSCAN
+import matplotlib.pyplot  as plt
+import seaborn as sns
+from mpl_toolkits.mplot3d import Axes3D
+
+cancer = pd.read_csv('./data.csv')
+data=pd.DataFrame(cancer)
+data.columns=['x','y','z']
+data = pd.concat([data],axis=1)
+
+feature = data[ ['x','y','z']]
+feature.head()
+
+model = DBSCAN(eps=0.3,min_samples=1)
+predict = pd.DataFrame(model.fit_predict(feature))
+predict.columns=['predict']
+
+# concatenate labels to df as a new column
+r = pd.concat([feature,predict],axis=1)
+
+print(r)
+
+data.head()
+
+fig = plt.figure( figsize=(6,6))
+ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
+ax.scatter(r['x'],r['y'],r['z'],c=r['predict'],alpha=0.5)
+ax.set_xlabel('Sepal lenth')
+ax.set_ylabel('Sepal width')
+ax.set_zlabel('Petal length')
+plt.show()
+
